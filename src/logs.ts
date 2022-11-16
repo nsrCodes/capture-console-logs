@@ -1,4 +1,4 @@
-import ConsoleCapture from ".";
+import {ConsoleCapture} from "./ConsoleCapture";
 
 export type LogType = "LOG" | "WARN" | "INFO" | "DEBUG" | "ERROR"
 export interface Log {
