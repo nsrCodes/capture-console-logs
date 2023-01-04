@@ -34,15 +34,15 @@ The output for the above example is
 
 ```sh
 [
-  { type: 'LOG', args: [ 1 ] },
-  { type: 'LOG', args: [ 'foo bar', [Object] ] },
-  { type: 'INFO', args: [ 'foo bar' ] },
+  { type: 'LOG', args: [ 'simple log' ] },
+  { type: 'INFO', args: [ 'informative log', [Object] ] },
   {
     type: 'ERROR',
     args: [
-      Error: something else
-          at somelogs (/Users/navdeep/Desktop/nsr/capture-console-logs/example.js:7:17)
-          at Object.<anonymous> (/Users/navdeep/Desktop/nsr/capture-console-logs/example.js:24:1)
+      Error: Our small petty error
+          at somelogs (/Users/navdeep/Desktop/Temp-RQ/capture-logs.js:143:17)
+          at main (/Users/navdeep/Desktop/Temp-RQ/capture-logs.js:175:3)
+          at Object.<anonymous> (/Users/navdeep/Desktop/Temp-RQ/capture-logs.js:182:1)
           at Module._compile (node:internal/modules/cjs/loader:1105:14)
           at Object.Module._extensions..js (node:internal/modules/cjs/loader:1159:10)
           at Module.load (node:internal/modules/cjs/loader:981:32)
@@ -51,8 +51,8 @@ The output for the above example is
           at node:internal/main/run_main_module:17:47
     ]
   },
-  { type: 'WARN', args: [ 'foo bar' ] },
-  { type: 'LOG', args: [ 'foo bar' ] }
+  { type: 'WARN', args: [ 'Better Watch Out!' ] },
+  { type: 'LOG', args: [ 'please work1' ] }
 ]
 ```
 
