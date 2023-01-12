@@ -1,7 +1,7 @@
 {
   "name": "capture-console-logs",
   "version": "2.0.1-rc.0",
-  "description": "Capture you console in a way that it is easy to reproduce its logs elsewhere",
+  "description": "Capture your console in a way that it is easy to reproduce its logs elsewhere",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "repository": {
@@ -11,11 +11,15 @@
   "scripts": {
     "build": "tsc",
     "prepack": "npm run build",
-    "prepare": "npm run build"
+    "prepare": "npm run build",
+    "deploy": "npm run build && npm publish"
   },
   "author": "Navdeep Singh Rathore",
   "license": "MIT",
   "devDependencies": {
     "typescript": "^4.8.4"
-  }
+  },
+  "files": [
+    "dist"
+  ]
 }
