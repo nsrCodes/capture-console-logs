@@ -13,7 +13,7 @@ npm i capture-console-logs
 ## Example 
 
 ```js
-const CaptureConsole= require("capture-console-logs")
+const CaptureConsole = require("capture-console-logs").default
 
 const cc = new CaptureConsole();
 console.log("ping pong") // not captured
@@ -34,27 +34,33 @@ The output for the above example is
 
 ```sh
 [
-  { type: 'LOG', args: [ 'simple log' ] },
-  { type: 'INFO', args: [ 'informative log', [Object] ] },
+  { function: 'log', args: [ 'simple log' ], ts: 1673463210311 },
   {
-    type: 'ERROR',
-    args: [
-      Error: Our small petty error
-          at somelogs (/Users/navdeep/Desktop/Temp-RQ/capture-logs.js:143:17)
-          at main (/Users/navdeep/Desktop/Temp-RQ/capture-logs.js:175:3)
-          at Object.<anonymous> (/Users/navdeep/Desktop/Temp-RQ/capture-logs.js:182:1)
-          at Module._compile (node:internal/modules/cjs/loader:1105:14)
-          at Object.Module._extensions..js (node:internal/modules/cjs/loader:1159:10)
-          at Module.load (node:internal/modules/cjs/loader:981:32)
-          at Function.Module._load (node:internal/modules/cjs/loader:822:12)
-          at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:77:12)
-          at node:internal/main/run_main_module:17:47
-    ]
+    function: 'info',
+    args: [ 'informative log', '{"a":1}' ],
+    ts: 1673463210311
   },
-  { type: 'WARN', args: [ 'Better Watch Out!' ] },
-  { type: 'LOG', args: [ 'please work1' ] }
+  {
+    function: 'error',
+    args: [
+      '{"stack":"Error: Our small petty error\\n    at Object.<anonymous> (/Users/navdeep/Desktop/nsr/test/me/index.js:10:15)\\n    at Module._compile (node:internal/modules/cjs/loader:1105:14)\\n    at Object.Module._extensions..js (node:internal/modules/cjs/loader:1159:10)\\n    at Module.load (node:internal/modules/cjs/loader:981:32)\\n    at Function.Module._load (node:internal/modules/cjs/loader:822:12)\\n    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:77:12)\\n    at node:internal/main/run_main_module:17:47","message":"Our small petty error"}'
+    ],
+    ts: 1673463210312
+  },
+  {
+    function: 'warn',
+    args: [ 'Better Watch Out!' ],
+    ts: 1673463210312
+  },
+  { function: 'debug', args: [ 'please work1' ], ts: 1673463210312 }
 ]
 ```
+
+**Note:** By default, while capturing original logs are not displayed in the console.
+To allow execution while capturing, pass `allowOriginalExecution` as `true` in the `start` command
+> cc.start(true)
+
+Whenever needed, you can use the `flush` method to clear all captured logs.
 
 You can also create the original log using these captures as follows
 ```js
@@ -64,7 +70,7 @@ const CaptureConsole, {makeOriginalLog} = require("capture-console-logs")
 
 const captures = cc.getCaptures();
 captures.forEach(log => {
-  makeOriginalLog(log)
+  CaptureConsole.makeOriginalLog(log)
 })
 ```
 
