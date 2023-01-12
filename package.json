@@ -1,6 +1,6 @@
 {
   "name": "capture-console-logs",
-  "version": "2.0.1-rc.0",
+  "version": "2.0.1-rc.1",
   "description": "Capture your console in a way that it is easy to reproduce its logs elsewhere",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
