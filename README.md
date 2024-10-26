@@ -1,36 +1,41 @@
-Most of the existing libraries capture and return the results from `stderr` and `stdout`.
-This although useful, makes it really hard to recreate the original console statements if you need to
+Most of the existing libraries capture and return the results from `stderr` and
+`stdout`. This although useful, makes it really hard to recreate the original
+console statements if you need to
 
-This package provides a way to do so by overriding the console methods for the duration of the capture.
+This package provides a way to do so by overriding the console methods for the
+duration of the capture.
 
 ## Installation
-This package is published [on npm](https://www.npmjs.com/package/capture-console-logs) and can be installed using
+
+This package is published
+[on npm](https://www.npmjs.com/package/capture-console-logs) and can be
+installed using
 
 ```
 npm i capture-console-logs
 ```
 
-## Example 
+## Example
 
 ```js
-const CaptureConsole = require("capture-console-logs").default
+const CaptureConsole = require("capture-console-logs").default;
 
 const cc = new CaptureConsole();
-console.log("ping pong") // not captured
+console.log("ping pong"); // not captured
 
-cc.start()
+cc.start();
 
-console.log("simple log")
-console.info("informative log", {a:1})
-console.error(new Error("Our small petty error"))
-console.warn("Better Watch Out!")
-console.debug("please work1")
+console.log("simple log");
+console.info("informative log", { a: 1 });
+console.error(new Error("Our small petty error"));
+console.warn("Better Watch Out!");
+console.debug("please work1");
 
-cc.stop()
+cc.stop();
 console.log(cc.getCaptures());
 ```
 
-The output for the above example is 
+The output for the above example is
 
 ```sh
 [
@@ -56,22 +61,25 @@ The output for the above example is
 ]
 ```
 
-**Note:** By default, while capturing original logs are not displayed in the console.
-To allow execution while capturing, pass `allowOriginalExecution` as `true` in the `start` command
+**Note:** By default, while capturing original logs are not displayed in the
+console. To allow execution while capturing, pass `allowOriginalExecution` as
+`true` in the `start` command
+
 > cc.start(true)
 
 Whenever needed, you can use the `flush` method to clear all captured logs.
 
 You can also create the original log using these captures as follows
+
 ```js
-const CaptureConsole, {makeOriginalLog} = require("capture-console-logs")
+const CaptureConsole, { makeOriginalLog } = require("capture-console-logs");
 
 // [...]
 
 const captures = cc.getCaptures();
-captures.forEach(log => {
-  CaptureConsole.makeOriginalLog(log)
-})
+captures.forEach((log) => {
+  CaptureConsole.makeOriginalLog(log);
+});
 ```
 
 This code is barely tested and so PR's, improvements and issues are all welcome

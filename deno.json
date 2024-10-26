@@ -1,0 +1,11 @@
+{
+    "name": "@nsr/capture-console-logs",
+    "version": "1.0.0",
+    "exports": {
+      "./src/ConsoleCapture.ts": "./src/ConsoleCapture.ts"
+    },
+    "nodeModulesDir": "auto",
+    "tasks": {
+      "bundle": "deno run -A build.ts"
+    }
+  }

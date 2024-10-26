@@ -1,9 +1,11 @@
-import { Log, overridableFunctionNames } from "./logs"
+import { type Log, overridableFunctionNames } from "./logs.ts";
 
-declare global {
-  interface Console { original: any; }
+interface ConsoleWithOriginal extends Console {
+  original: { [key: string]: unknown };
 }
-console.original = {}
+
+const consoleWithOriginal = console as ConsoleWithOriginal;
+consoleWithOriginal.original = {};
 
 export class ConsoleCapture {
   private static captures: Log[];
@@ -12,10 +14,11 @@ export class ConsoleCapture {
   constructor() {
     ConsoleCapture.captures = [];
   }
+
   // Core
-  private static saveLog(functionName: string, args: [any]) {
-    const finalArgs = args.map(arg => {
-      if (typeof arg == 'object') {
+  private static saveLog(functionName: string, args: unknown[]): void {
+    const finalArgs = args.map((arg) => {
+      if (typeof arg == "object") {
         if (arg instanceof Error) {
           return JSON.stringify(arg, Object.getOwnPropertyNames(arg));
           // todo: some way to identify this string from other json stringified strings
@@ -32,61 +35,58 @@ export class ConsoleCapture {
       ts: Date.now(),
     });
   }
-  private static setNewFunctions(allowOriginalExecution = false) {
+
+  private static setNewFunctions(allowOriginalExecution = false): void {
     const proxyHandler = {
-      apply: (target: Function, thisArgument: any, argumentsList: [any]) => {
+      apply: (target: (...args: unknown[]) => unknown, thisArgument: unknown, argumentsList: unknown[]): void => {
         ConsoleCapture.saveLog(target.name, argumentsList);
         target.bind(thisArgument);
-        if (allowOriginalExecution) return target(...argumentsList);
-        return;
+        if (allowOriginalExecution) target(...argumentsList);
       },
     };
 
-    overridableFunctionNames.forEach(funcName => {
+    overridableFunctionNames.forEach((funcName) => {
       if (!ConsoleCapture.consoleOverriden) {
-        // @ts-ignore
-        console.original[funcName] = console[funcName];
+        consoleWithOriginal.original[funcName as keyof ConsoleWithOriginal] = console[funcName as keyof Console];
       }
-      // @ts-ignore
-      console[funcName] = new Proxy(console[funcName], proxyHandler);
+      console[funcName as keyof Console] = new Proxy(console[funcName as keyof Console] as (...args: unknown[]) => unknown, proxyHandler) as unknown as (...args: unknown[]) => void;
     });
     ConsoleCapture.consoleOverriden = true;
   }
 
-  private static resetToOriginalFunctions() {
+  private static resetToOriginalFunctions(): void {
     if (ConsoleCapture.consoleOverriden) {
-      overridableFunctionNames.forEach(funcName => {
-        // @ts-ignore
-        console[funcName] = console.original[funcName];
+      overridableFunctionNames.forEach((funcName) => {
+        console[funcName as keyof Console] = consoleWithOriginal.original[funcName as keyof ConsoleWithOriginal] as (...args: unknown[]) => void;
       });
     }
     ConsoleCapture.consoleOverriden = false;
   }
 
   // APIS
-  start(allowOriginalExecution = false) {
+  start(allowOriginalExecution = false): void {
     ConsoleCapture.captures = [];
     ConsoleCapture.setNewFunctions(allowOriginalExecution);
   }
 
-  stop() {
+  stop(): void {
     ConsoleCapture.resetToOriginalFunctions();
   }
 
-  flush() {
+  flush(): void {
     ConsoleCapture.captures = [];
   }
 
-  getCaptures() {
+  getCaptures(): Log[] {
     return ConsoleCapture.captures;
   }
 
-  static makeOriginalLog(log: Log) {
+  static makeOriginalLog(log: Log): void {
     ConsoleCapture.resetToOriginalFunctions();
 
     if (overridableFunctionNames.includes(log.function)) {
-      const finalArgs = log.args.map(arg => {
-        if (typeof arg == 'string') {
+      const finalArgs: unknown[] = log.args.map((arg) => {
+        if (typeof arg == "string") {
           try {
             // return JSON.parse(arg);
 
@@ -99,10 +99,9 @@ export class ConsoleCapture {
         }
         return arg;
       });
-      // @ts-ignore
-      console[log.function](...finalArgs);
+      (console[log.function as keyof Console] as (...args: unknown[]) => void)(...finalArgs as [unknown, ...unknown[]]);
     } else {
-      throw Error('Invalid Log type');
+      throw Error("Invalid Log type");
     }
   }
 }

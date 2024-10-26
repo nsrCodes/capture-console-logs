@@ -1,3 +1,3 @@
-import { ConsoleCapture } from "./ConsoleCapture";
+import { ConsoleCapture } from "./ConsoleCapture.ts";
 
-export default ConsoleCapture
+export default ConsoleCapture;

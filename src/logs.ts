@@ -1,4 +1,10 @@
-export const overridableFunctionNames = ['log', 'warn', 'info', 'debug', 'error'];
+export const overridableFunctionNames = [
+  "log",
+  "warn",
+  "info",
+  "debug",
+  "error",
+];
 
 export interface Log {
   function: string;

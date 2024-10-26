@@ -1,0 +1,5 @@
+{
+  "name": "@nsr/capture-console-logs",
+  "version": "0.1.0",
+  "exports": "./src/index.ts"
+}
